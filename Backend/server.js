@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const crypto = require('crypto'); 
-const { sendReportLink } = require('./emailService');
+const { sendReportLink } = require('./services/emailService');
 
 const app = express();
 const PORT = 3000;
