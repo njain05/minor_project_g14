@@ -1,5 +1,5 @@
-const crypto = require('crypto');
-const Report = require('../models/report');
+import crypto from 'crypto';
+import Report from '../models/report';
 const { sendReportLink } = require('../services/emailService');
 
 const notifyParent = async (req, res) => {
