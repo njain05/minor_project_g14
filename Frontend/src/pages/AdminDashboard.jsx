@@ -14,18 +14,42 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
-  const sendReport = (email, name) => {
-    toast.success(`Secure Semester Report sent via Email to ${email}`);
+  const sendReport = async (email, name, urn) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/notify-parent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'verification-key': 'BKS' // Ensure this matches process.env.INTERNAL_SERVER_KEY in your backend .env
+        },
+        body: JSON.stringify({
+          studentName: name,
+          parentEmail: email,
+          urn: urn
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(`Secure Semester Report sent via Email to ${email}`);
+      } else {
+        toast.error(`Failed to send report: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error sending report:', error);
+      toast.error('Network error occurred while connecting to the server.');
+    }
   };
 
   const getStatusBadge = (status) => {
     switch (status) {
       case 'Eligible':
-        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1"/> Eligible</span>;
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" /> Eligible</span>;
       case 'Provisionally Detained':
-        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><AlertCircle className="w-3 h-3 mr-1"/> Prov. Detained</span>;
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><AlertCircle className="w-3 h-3 mr-1" /> Prov. Detained</span>;
       case 'Detained':
-        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><AlertCircle className="w-3 h-3 mr-1"/> Detained</span>;
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><AlertCircle className="w-3 h-3 mr-1" /> Detained</span>;
       default:
         return <span>{status}</span>;
     }
@@ -40,7 +64,7 @@ const AdminDashboard = () => {
             <Users className="h-6 w-6 text-brand-light" />
             <h1 className="text-xl font-bold">Academic Status Transparency System</h1>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md text-brand-light hover:bg-white/10 transition-colors"
           >
@@ -92,10 +116,9 @@ const AdminDashboard = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
-                        onClick={() => sendReport(student.email, student.name)}
+                        onClick={() => sendReport(student.email, student.name, student.urn)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-light text-brand-blue font-medium rounded-md hover:bg-blue-100 transition-colors border border-blue-200"
-                        title="Generate & Send Report"
-                      >
+                        title="Generate & Send Report">
                         <Send className="w-4 h-4" />
                         <span>Send Report</span>
                       </button>

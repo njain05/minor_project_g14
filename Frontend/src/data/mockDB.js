@@ -60,12 +60,12 @@ export const mockStudents = [
     ]
   },
   {
-    urn: '2302627',
-    name: 'Priya Desai',
+    urn: '2302492',
+    name: 'Balkrishan Singh',
     semester: 4,
-    email: 'priya.desai@example.edu',
-    attendancePercentage: 78.5,
-    sgpa: 7.9,
+    email: 'Balkrishan62005@gmail.com',
+    attendancePercentage: 80.5,
+    sgpa: 8.5,
     status: 'Eligible',
     subjectMarks: [
       { subject: 'Data Structures', marks: 80, maxMarks: 100 },
